@@ -3,11 +3,13 @@ require 'spec_helper'
 describe InkFilePicker::Response do
   let(:http_response_body) { '{"url": "https://www.filepicker.io/api/file/WmFxB2aSe20SGT2kzSsr", "size": 234, "type": "image/jpeg", "filename": "test.jpg", "key": "WmFxB2aSe20SGT2kzSsr_test.jpg"}' }
   let(:http_response) do
-    Faraday::Response.new(
-      body: http_response_body,
-      status: 200
-    )
+    env = Faraday::Env.new
+    env.status = 200
+    env.body = http_response_body
+    env.url = URI('http://example.com')
+    Faraday::Response.new(env)
   end
+
 
   subject { described_class.new http_response }
 
